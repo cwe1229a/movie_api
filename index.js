@@ -8,7 +8,7 @@ const bodyParser = require('body-parser'),
   methodOverride = require('method-override');
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
 
-//logging 
+//logging
 app.use(morgan('combined', {stream: accessLogStream}));
 
 //movie list
@@ -73,7 +73,7 @@ app.get('/documentation', (req, res) => {
 });
 
 app.get('/movies', (req, res) => {
-  res.send('Pirate Movies!');
+  res.send('movies');
 });
 
 

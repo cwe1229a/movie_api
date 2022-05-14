@@ -8,5 +8,82 @@
   <body>
     <h1>myFlix Application</h1>
     <p>myFlix is a web application that grants users to obtain information about various pirate movies like their directors and genres. Users will also be able to sign up, update personal info, and creat a list of their favorite pirate movies </p>
+
+    <h2> Features of the app </h2>
+    <table>
+      <tr>
+        <th>Request</th>
+        <th>URL</th>
+        <th>HTTP Method</th>
+        <th>Request Body Data Format</th>
+        <th>Response Body Data Format</th>
+      </tr>
+      <tr>
+        <td>Get list of all pirate movies</td>
+        <td>/movies</td>
+        <td>Get</td>
+        <td>n/a</td>
+        <td>JSON object holding all data on pirate movies</td>
+      </tr>
+      <tr>
+        <td>Get data about one movie by title</td>
+        <td>/movies/[title]</td>
+        <td>Get</td>
+        <td>:Title</td>
+        <td>JSON object holding data about single pirate movie, contains director and title ex
+          {
+            Title: 'The Crimson Pirate',
+            Director: 'Robert Siodmak'
+          }</td>
+      </tr>
+      <tr>
+        <td>Get data about one movie by director</td>
+        <td>/movies/[director]</td>
+        <td>Get</td>
+        <td>:Director</td>
+        <td>JSON object holding data about single pirate movie, contains director
+          {
+            Director: 'Robert Siodmak'
+          }</td>
+      <tr>
+        <td>Let users register</td>
+        <td>/users/register</td>
+        <td>Post</td>
+        <td>:Register</td>
+        <td>Data containing new user details ex
+          {
+            name: '',
+            favoriteMovies: '',
+          }
+          }</td>
+      <tr>
+        <td>Let users update their information</td>
+        <td>/users/[username]</td>
+        <td>Put</td>
+        <td>:Users</td>
+        <td>JSON containing user updates to old information</td>
+        <td>Text response that changes were successfully made</td>
+      </tr>
+      <tr>
+        <td>Let users add movies to their favorite list</td>
+        <td>/favorites/add/[username]/[title]</td>
+        <td>Post</td>
+        <td>:Add</td>
+        <td>JSON data containing new data from chosen movie to be added</td>
+      </tr>
+      <tr>
+        <td>Let users remove movies from theri favorite list</td>
+        <td>/favorites/delete/[username]/[title]</td>
+        <td>Delete</td>
+        <td>:Username, :Title</td>
+        <td>List is without selected movie that was removed</td>
+      <tr>
+        <td>Let users unregister</td>
+        <td>/users/unregister/[username]</td>
+        <td>Delete</td>
+        <td>:Users</td>
+        <td>Notification/text that user was unregistered</td>
+
+ </table>
   </body>
 </html>

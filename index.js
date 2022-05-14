@@ -1,15 +1,25 @@
 const express = require('express'),
-  morgan = require('morgan'),
-  fs = require('fs'),
-  path = require('path');
-
+     morgan = require('morgan'),
+     bodyParser = require('body-parser'),
+     uuid = require('uuid');
+//const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
 const app = express();
-const bodyParser = require('body-parser'),
-  methodOverride = require('method-override');
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
+// //logging
+//app.use(morgan('common'));
 
-//logging
-app.use(morgan('combined', {stream: accessLogStream}));
+app.use(bodyParser.json());
+
+//app.use(bodyParser.urlencoded({
+  //extended: true
+//}));
+
+app.use('/Documentation', express.static('public'));
+
+// //error check
+app.use((err, req, res, next) => {
+  consolve.error(err.stack);
+  res.status(500).send('something broke!')
+});
 
 //movie list
 let movies = [
@@ -61,9 +71,25 @@ let movies = [
   {
     Title: 'Cutthroat Island',
     Director: 'Renny Harlin'
+  }
+];
+
+//user list
+let users = [
+  {
+    id: 1,
+    name: 'Jessica',
+    favoriteMovies: [],
   },
-]
-//get requests
+
+  {
+    id: 2,
+    name: 'Leah',
+    favoriteMovies: ['Cutthroat Island'],
+  }
+];
+
+//get requests Read
 app.get('/', (req, res) => {
   res.send('Welcome to my movie app!');
 });
@@ -71,23 +97,100 @@ app.get('/', (req, res) => {
 app.get('/documentation', (req, res) => {
   res.sendFile('public/documentation.html', {root: __dirname});
 });
-
+//gets data of all pirate movies
 app.get('/movies', (req, res) => {
-  res.send('movies');
+  res.status(200).json(movies);
 });
 
+app.get('/movies/:title', (req, res) => {
+    const { title } = req.params;
+    const movie = movies.find(movie => movie.Title === title);
+    if(movie) {
+        res.status(200).json(movie);
+    } else {
+        res.status(400).send('no such movie');
+      }
+});
 
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.get('/movies/:director', (req, res) => {
+    const { directorName } = req.params;
+    const Director = movies.find(movie => movie.Director.Name === directorName );
+    if (Director) {
+        res.status(200).json(Director);
+    } else {
+        res.status(400).send('that is not a director')
+      }
+});
 
-app.use(bodyParser.json());
-app.use(methodOverride());
+// create
+//register new user
+app.post('/users', (req, res) => {
+  const newUser = req.body;
 
-app.use('/Documentation', express.static('public'));
+  if (newUser.name) {
+    newUser.id = uuid.v4();
+    users.push(newUser);
+    res.status(201).json(newUser)
+  } else {
+    res.status(400).send('users need names')
+  }
+});
+//update
+//updating user
+app.put('/users/:id', (req, res) => {
+    const { id } = req.params;
+    const updatedUser = req.body;
 
-//error check
-app.use((err, req, res, next) => {
+    let user = users.find( user => user.id == id);
+
+    if (user) {
+        user.name = updatedUser.name;
+        res.status(201).json(user);
+    } else {
+        res.status(400).send('no such user')
+      }
+});
+//create
+//add movie to user list
+app.post('/users/:id/:movieTitle', (req, res) => {
+    const { id, movieTitle } = req.params;
+
+    let user = users.find( user => user.id == id);
+
+    if (user) {
+        user.favoriteMovies.push(movieTitle);
+        res.status(200).send(`${movieTitle} has been added to user ${id} array`);;
+    } else {
+        res.status(400).send('no such user')
+      }
+});
+//delete
+//remove movie
+app.delete('/users/:id/:movieTitle', (req, res) => {
+    const { id, movieTitle } = req.params;
+
+    let user = users.find( user => user.id == id);
+
+    if (user) {
+        user.favoriteMovies = user.favoriteMovies.filter( title => title !== movieTitle);
+        res.status(200).send(`${movieTitle} has been removed from user ${id} array`);;
+    } else {
+        res.status(400).send('no such user')
+      }
+});
+//delete
+//remove user
+app.delete('/users/:id', (req, res) => {
+    const { id } = req.params;
+
+    let user = users.find( user => user.id == id);
+
+    if (user) {
+        users = users.filter( user => user.id != id);
+        res.status(200).send(`user ${id} has been removed`);;
+    } else {
+        res.status(400).send('no such user')
+      }
 });
 
 app.listen(8080, () => {

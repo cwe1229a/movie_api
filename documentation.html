@@ -30,10 +30,10 @@
         <td>/movies/[title]</td>
         <td>Get</td>
         <td>:Title</td>
-        <td>JSON object holding data about single pirate movie, contains director and title ex
+        <td>JSON object holding data about single pirate movie, contains title and description
           {
             Title: 'The Crimson Pirate',
-            Director: 'Robert Siodmak'
+            Description: 'movie description'
           }</td>
       </tr>
       <tr>
@@ -43,7 +43,10 @@
         <td>:Director</td>
         <td>JSON object holding data about single pirate movie, contains director
           {
-            Director: 'Robert Siodmak'
+            Director: 'Robert Siodmak',
+            Bio: '',
+            Birth: '',
+            Death: ''
           }</td>
       <tr>
         <td>Let users register</td>
@@ -52,7 +55,9 @@
         <td>:Register</td>
         <td>Data containing new user details ex
           {
-            name: '',
+            username: '',
+            password: '',
+            birthday: '',
             favoriteMovies: '',
           }
           }</td>

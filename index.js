@@ -25,7 +25,7 @@ app.use(morgan('common'));
 //const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'});
 // //error checks
 app.use((err, req, res, next) => {
-  consolve.error(err.stack);
+  console.error(err.stack);
   res.status(500).send('something broke!')
 });
 
@@ -152,8 +152,8 @@ app.get('/movies/directors/:Name', (req, res) => {
 });
 
 // Get genre by name
-app.get('/movies/genre/:Name', (req, res) => {
-  Movies.findOne({ 'Genre.Name' : req.params.Name })
+app.get('/movies/genre/:name', (req, res) => {
+  Movies.findOne({ 'Genre.Name' : req.params.name })
     .then((genre) => {
       res.status(201).json(genre)
     })
@@ -252,7 +252,7 @@ app.post('/users/:Username/movies/:MovieID', (req, res) => {
 });
 //delete
 //remove movie
-app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+app.delete("/users/:Username/movies/:MovieID", (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
     $pull: { FavoriteMovies: req.params.MovieID }
   },

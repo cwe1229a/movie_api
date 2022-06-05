@@ -12,12 +12,12 @@ const path = require('path');
 const app = express();
 const { check, validationResult } = require('express-validator');
 //mongoose connection
-const url = 'mongodb://127.0.0.1:27017/myFlixDB'
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+// const url = 'mongodb://127.0.0.1:27017/myFlixDB'
+// mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //heroku connection
-
-// mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+require("dotenv").config();
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 //middleware
@@ -57,7 +57,7 @@ app.use((err, req, res, next) => {
 // mongoose error check
 const db = mongoose.connection
 db.once('open', _ => {
-  console.log('Database connected:', url)
+  console.log('Database connected:')
 })
 
 db.on('error', err => {

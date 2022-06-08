@@ -1,4 +1,3 @@
-
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -27,18 +26,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const cors = require('cors');
 app.use(cors());
 
-let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://piratemoviesapi.herokuapp.com'];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) { //If a specific origin isn't found on the list of allowed origins
-      let message = 'The CORS policy for this application does not allow access from origin ' + origin;
-      return callback(new Error(message), false);
-    }
-    return callback(null, true);
-  }
-}));
 //authentication and authorization
 let auth = require('./auth')(app);
 const passport = require('passport');
@@ -63,74 +50,6 @@ db.once('open', _ => {
 db.on('error', err => {
   console.error('connection error:', err)
 })
-
-//movie list
-// let movies = [
-//   {
-//     Title: 'The Crimson Pirate',
-//     Director: 'Robert Siodmak'
-//   },
-//
-//   {
-//     Title: 'Captain Blood',
-//     Director: 'Michael Curtiz'
-//   },
-//
-//   {
-//     Title: 'The Sea Hawk',
-//     Director: 'Michael Curtiz'
-//   },
-//
-//   {
-//     Title: 'Against All Flags',
-//     Director: 'George Sherman'
-//   },
-//
-//   {
-//     Title: 'The Master of Ballantrae',
-//     Director: 'William Keighley'
-//   },
-//
-//   {
-//     Title: 'Pirates of the Caribbean: The Curse of the Black Pearl',
-//     Director: 'Gore Verbinski'
-//   },
-//
-//   {
-//     Title: 'Pirates of the Caribbean: Dead Mans Chest',
-//     Director: 'Gore Verbinski'
-//   },
-//
-//   {
-//     Title: 'Pirates of the Caribbean: On Stranger Tides',
-//     Director: 'Rob Marshall'
-//   },
-//
-//   {
-//     Title: 'Blackbeard: Terror at Sea',
-//     Director: 'Richard Dale'
-//   },
-//
-//   {
-//     Title: 'Cutthroat Island',
-//     Director: 'Renny Harlin'
-//   }
-// ];
-//
-// //user list
-// let users = [
-//   {
-//     id: 1,
-//     name: 'Jessica',
-//     favoriteMovies: [],
-//   },
-//
-//   {
-//     id: 2,
-//     name: 'Leah',
-//     favoriteMovies: ['Cutthroat Island'],
-//   }
-// ];
 
 //get requests Read
 app.get('/', (req, res) => {
@@ -159,7 +78,7 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
       res.status(200).json(movie);
     }else{
       res.status(500).send('Movie not found.');
-    };
+    }
   })
   .catch((err) => {
     res.status(500).send('Error: ' + err);

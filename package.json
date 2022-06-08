@@ -37,7 +37,8 @@
   },
   "devDependencies": {
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
-    "eslint": "^8.14.0",
-    "nodemon": "^2.0.16"
+    "eslint": "^8.17.0",
+    "nodemon": "^2.0.16",
+    "prettier": "2.6.2"
   }
 }

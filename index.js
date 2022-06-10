@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
-const mongoose =require('mongoose');
+const mongoose = require('mongoose');
 const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -16,7 +16,7 @@ const { check, validationResult } = require('express-validator');
 
 //heroku connection
 require("dotenv").config();
-mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 //middleware
@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/documentation', (req, res) => {
-  res.sendFile('public/documentation.html', {root: __dirname});
+  res.sendFile('public/documentation.html', { root: __dirname });
 });
 //gets data of all pirate movies
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -73,20 +73,20 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 //get movie by title
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
-  .then((movie) => {
-    if(movie){
-      res.status(200).json(movie);
-    }else{
-      res.status(500).send('Movie not found.');
-    }
-  })
-  .catch((err) => {
-    res.status(500).send('Error: ' + err);
-  });
+    .then((movie) => {
+      if (movie) {
+        res.status(200).json(movie);
+      } else {
+        res.status(500).send('Movie not found.');
+      }
+    })
+    .catch((err) => {
+      res.status(500).send('Error: ' + err);
+    });
 });
 //get movie by director
 app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Movies.findOne({ 'Director.Name' : req.params.Name })
+  Movies.findOne({ 'Director.Name': req.params.Name })
     .then((director) => {
       res.status(201).json(director)
     })
@@ -98,7 +98,7 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false
 
 // Get genre by name
 app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Movies.findOne({ 'Genre.Name' : req.params.name })
+  Movies.findOne({ 'Genre.Name': req.params.name })
     .then((genre) => {
       res.status(201).json(genre)
     })
@@ -135,7 +135,7 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
 //register new user
 app.post('/users',
   [
-    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username is required').isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not appear to be valid').isEmail()
@@ -220,17 +220,17 @@ app.put(
 //add movie to user list
 app.post('/users/:Username/movies/:MovieID', passport.authenticate("jwt", { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
-     $push: { FavoriteMovies: req.params.MovieID }
-   },
-   { new: true }, // This line makes sure that the updated document is returned
-  (err, updatedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
+    $push: { FavoriteMovies: req.params.MovieID }
+  },
+    { new: true }, // This line makes sure that the updated document is returned
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
 });
 //delete
 //remove movie
@@ -238,15 +238,15 @@ app.delete("/users/:Username/movies/:MovieID", passport.authenticate("jwt", { se
   Users.findOneAndUpdate({ Username: req.params.Username }, {
     $pull: { FavoriteMovies: req.params.MovieID }
   },
-  { new: true },
-  (err, updatedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
+    { new: true },
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
 });
 //delete
 //remove user
@@ -266,6 +266,6 @@ app.delete('/users/:Username', passport.authenticate("jwt", { session: false }),
 });
 
 const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0',() => {
- console.log('Listening on Port ' + port);
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on Port ' + port);
 });

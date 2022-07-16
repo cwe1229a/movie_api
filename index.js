@@ -20,11 +20,12 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 
 
 //middleware
-const cors = require('cors');
-app.use(cors());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 //cors
+const cors = require('cors');
+app.use(cors());
 
 //authentication and authorization
 let auth = require('./auth')(app);

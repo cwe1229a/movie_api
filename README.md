@@ -8,3 +8,4 @@
  - Javascript
  - mongoose
  - mongo
+ - cors
